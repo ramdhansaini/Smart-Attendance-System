@@ -1,62 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register Student</title>
-    <link rel="stylesheet" href="../static/style.css">
+    <title>Register Face</title>
 </head>
 <body>
-    <div>
-        <form action="registerstudent" method="post">
-            <label for="name">Enter Full Name : </label>
-            <input type="text" id="name" name="name" required>
-            <br><br>
-            <label for="rollno">Enter Roll No : </label>
-            <input type="number" id="rollno" name="rollno" required>
-            <br><br>
-            <button>Register</button>
-        </form>
-        <h2>Student Camera</h2>
-        <video id="video" width="400" height="440" autoplay></video>
-        <br><br>
-            <button id="capture" type="button">Capture</button>
-            <canvas id="canvas" width="400" height="440" style="display: none;"></canvas>
-            <script>
-    const video = document.getElementById('video');
-    const canvas = document.getElementById('canvas');
-    const captureButton = document.getElementById('capture');
-
-    // Start webcam
-    navigator.mediaDevices.getUserMedia({ video: true })
-        .then(stream => {
-            video.srcObject = stream;
-        })
-        .catch(err => {
-            console.error('Error accessing webcam: ', err);
-        });
-
-    // Capture image and send to server
-    captureButton.addEventListener('click', () => {
-        const context = canvas.getContext('2d');
-        context.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-        const imageData = canvas.toDataURL('image/png');
-
-        fetch('/capture', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ image: imageData })
-        })
-        .then(response => response.json())
-        .then(data => alert(data.message))
-        .catch(err => console.error('Error sending image:', err));
-    });
-</script>
-
-
-    </div>
+    <h2>Register Student Face</h2>
+    <form action="/register" method="POST">
+        <input type="text" name="id" placeholder="User ID" required>
+        <input type="text" name="name" placeholder="Name" required>
+        <button type="submit">Register Face</button>
+    </form>
 </body>
 </html>

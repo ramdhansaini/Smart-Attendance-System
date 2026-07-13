@@ -1,80 +1,73 @@
-from flask import Flask, render_template, request
-import os, base64, uuid, sqlite3
+import os
+import cv2
+import re
+import base64
+import pickle
+import face_recognition
+from flask import Flask, request, render_template, jsonify
 
-app = Flask(__name__, template_folder='templates')
+app = Flask(__name__)
+# -------------------------------
+# Face Capture Function
+# -------------------------------
+def capture_face(user_id: str, user_name: str) -> None:
+    cam = cv2.VideoCapture(0)
+    face_detector = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
+    
+    count = 0
+    os.makedirs(f"dataset/{user_id}", exist_ok=True)
 
-# Ensure uploads folder exists
-UPLOAD_FOLDER = 'uploads'
-os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+    while True:
+        ret, frame = cam.read()
+        if not ret:
+            break
 
-# Ensure SQLite database exists
-DB_FILE = 'students.db'
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        faces = face_detector.detectMultiScale(gray, 1.3, 5)
 
-def init_db():
-    conn = sqlite3.connect(DB_FILE)
-    cursor = conn.cursor()
-    cursor.execute('''
-        CREATE TABLE IF NOT EXISTS students (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT NOT NULL,
-            rollno TEXT NOT NULL,
-            image_path TEXT NOT NULL
-        )
-    ''')
-    conn.commit()
-    conn.close()
+        for (x, y, w, h) in faces:
+            count += 1
+            cv2.imwrite(f"dataset/{user_id}/{user_name}_{count}.jpg", gray[y:y+h, x:x+w])
+            cv2.rectangle(frame, (x, y), (x+w, y+h), (255, 0, 0), 2)
 
-init_db()
+        cv2.imshow('Capturing Faces', frame)
+        if cv2.waitKey(1) & 0xFF == ord('q') or count >= 20:
+            break
 
-@app.route('/')
-def home():
+    cam.release()
+    cv2.destroyAllWindows()
+
+# -------------------------------
+# Flask Routes
+# -------------------------------
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        user_id = request.form['id']
+        user_name = request.form['name']
+        
+        # Capture face images
+        capture_face(user_id, user_name)
+        
+        # Update encodings
+        encode_faces()
+        
+        return "Face registered successfully!"
     return render_template('registerstudent.html')
 
-@app.route('/registerstudent', methods=['POST'])
-def register_student():
+# Route for AJAX capture (if using webcam + JS)
+@app.route('/capture', methods=['POST'])
+def capture():
     data = request.get_json()
-    if not data:
-        return {'message': 'No data received'}, 400
+    image_data = re.sub('^data:image/.+;base64,', '', data['image'])
+    image_bytes = base64.b64decode(image_data)
 
-    name = data.get('name')
-    rollno = data.get('rollno')
-    image_data = data.get('image')
+    os.makedirs("dataset", exist_ok=True)
+    filename = f"dataset/student_{len(os.listdir('dataset'))+1}.png"
+    with open(filename, "wb") as f:
+        f.write(image_bytes)
 
-    if not name or not rollno or not image_data:
-        return {'message': 'Missing required fields'}, 400
-
-    # Decode and save image with unique filename
-    encoded = image_data.split(',', 1)[1]
-    filename = f"{uuid.uuid4().hex}.png"
-    filepath = os.path.join(UPLOAD_FOLDER, filename)
-    with open(filepath, 'wb') as f:
-        f.write(base64.b64decode(encoded))
-
-    # Save student info into SQLite
-    conn = sqlite3.connect(DB_FILE)
-    cursor = conn.cursor()
-    cursor.execute('INSERT INTO students (name, rollno, image_path) VALUES (?, ?, ?)',
-                   (name, rollno, filepath))
-    conn.commit()
-    conn.close()
-
-    return {'message': f'Student {name} registered successfully with Roll No {rollno}!'}
-
-@app.route('/students')
-def list_students():
-    conn = sqlite3.connect(DB_FILE)
-    cursor = conn.cursor()
-    cursor.execute('SELECT id, name, rollno, image_path FROM students')
-    students = cursor.fetchall()
-    conn.close()
-
-    # Return as JSON for simplicity
-    return {
-        'students': [
-            {'id': s[0], 'name': s[1], 'rollno': s[2], 'image_path': s[3]}
-            for s in students
-        ]
-    }
+    return jsonify({"message": "Face captured and saved successfully!"})
 
 if __name__ == '__main__':
     app.run(debug=True)
