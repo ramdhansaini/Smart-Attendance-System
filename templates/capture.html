@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Capture Face</title>
+    <link rel="stylesheet" href="../static/style.css">
+</head>
+<body>
+    <header class="header">
+        <h1>Capture Face</h1>
+        <p>Upload a face image to verify the student's identity and mark attendance.</p>
+    </header>
+    <div class="container">
+        <div class="card">
+            <h2>Capture Using Webcam</h2>
+            <video id="video" autoplay playsinline></video>
+            <canvas id="canvas" style="display: none;"></canvas>
+            <div class="button-group">
+                <button type="button" id="startCamera">Start Camera</button>
+                <button type="button" id="captureImage">Capture Image</button>
+            </div>
+            <form action="/recognize" method="POST">
+                <input type="hidden" name="captured_image" id="capturedImage">
+                <button type="submit">Verify Attendance</button>
+            </form>
+        </div>
+        <div class="card">
+            <h2>Student Verification</h2>
+            <form action="/recognize" method="POST" enctype="multipart/form-data">
+                <label for="image">Upload Student Image</label>
+                <input type="file" name="image" id="image" accept="image/*" required>
+                <button type="submit">Upload and Verify Attendance</button>
+            </form>
+        </div>
+        <div class="card">
+            <h2>Instructions</h2>
+            <ul>
+                <li>Upload a clear image of one student.</li>
+                <li>Ensure the face is completely visible.</li>
+                <li>Avoid blurry or low-quality images</li>
+                <li>Good lighting improves recognition accuracy.</li>
+                <li>Only registered students can mark attendance.</li>
+            </ul>
+        </div>
+    </div>
+    <footer>
+        <p>&copy; 2026 Face Attendance System | Developed Using Flask, OpenCV and InsightFace</p>
+    </footer>
+    <script src="../static/js/camera.js"></script>
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recognition Result</title>
+    <link rel="stylesheet" href="../static/style.css">
+</head>
+<body>
+    <header class="header">
+        <h1>Recognition Result</h1>
+        <p>Face Recognition System</p>
+    </header>
+    <div class="container">
+        {% if status %}
+        <div class="card">
+            <h2>Attendance Marked Successfully</h2>
+            <table class="result-table">
+                <tr>
+                    <th>Student Name</th>
+                    <td>{{student}}</td>
+                </tr>
+                <tr>
+                    <th>Roll Number</th>
+                    <td>{{roll}}</td>
+                </tr>
+                <tr>
+                    <th>Department</th>
+                    <td>{{department}}</td>
+                </tr>
+                <tr>
+                    <th>Similarity Score</th>
+                    <td>{{similarity}}</td>
+                </tr>
+                <tr>
+                    <th>Date</th>
+                    <td>{{date}}</td>
+                </tr>
+                <tr>
+                    <th>Time</th>
+                    <td>{{time}}</td>
+                </tr>
+                <tr>
+                    <th>Status</th>
+                    <td>Present</td>
+                </tr>
+            </table>
+            <br>
+            <form action="/">
+                <button type="submit">Back to Home</button>
+            </form>
+        </div>
+        {% else %}
+        <div class="card">
+            <h2>Person Not Registered</h2>
+            <p>The uploaded face does not match any registered student.</p>
+            <p>Please register the student before marking attendance.</p>
+            <form action="/profile">
+                <button type="submit">Register Student</button>
+            </form>
+            <form action="/capture">
+                <button type="submit">Try again</button>
+            </form>
+        </div>
+        {% endif %}
+    </div>
+    <footer>
+        <p>
+            &copy; Face Attendance System | Developed Using Flask, OpenCV and InsightFace
+        </p>
+    </footer>
+</body>
+</html>

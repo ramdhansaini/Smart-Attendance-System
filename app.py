@@ -1,73 +1,58 @@
+from flask import Flask, render_template, request, redirect
 import os
-import cv2
-import re
-import base64
-import pickle
-import face_recognition
-from flask import Flask, request, render_template, jsonify
-
+from model.generate_embeddings import generate_embeddings
+from model.recognize import FaceRecognizer
+from utils.file_handler import (save_uploaded_images, save_temp_image, delete_temp_file)
+from utils.image_handler import save_webcam_image
+from utils.attendance import (mark_attendance, get_attendance)
 app = Flask(__name__)
-# -------------------------------
-# Face Capture Function
-# -------------------------------
-def capture_face(user_id: str, user_name: str) -> None:
-    cam = cv2.VideoCapture(0)
-    face_detector = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
-    
-    count = 0
-    os.makedirs(f"dataset/{user_id}", exist_ok=True)
-
-    while True:
-        ret, frame = cam.read()
-        if not ret:
-            break
-
-        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        faces = face_detector.detectMultiScale(gray, 1.3, 5)
-
-        for (x, y, w, h) in faces:
-            count += 1
-            cv2.imwrite(f"dataset/{user_id}/{user_name}_{count}.jpg", gray[y:y+h, x:x+w])
-            cv2.rectangle(frame, (x, y), (x+w, y+h), (255, 0, 0), 2)
-
-        cv2.imshow('Capturing Faces', frame)
-        if cv2.waitKey(1) & 0xFF == ord('q') or count >= 20:
-            break
-
-    cam.release()
-    cv2.destroyAllWindows()
-
-# -------------------------------
-# Flask Routes
-# -------------------------------
-@app.route('/register', methods=['GET', 'POST'])
-def register():
-    if request.method == 'POST':
-        user_id = request.form['id']
-        user_name = request.form['name']
-        
-        # Capture face images
-        capture_face(user_id, user_name)
-        
-        # Update encodings
-        encode_faces()
-        
-        return "Face registered successfully!"
-    return render_template('registerstudent.html')
-
-# Route for AJAX capture (if using webcam + JS)
-@app.route('/capture', methods=['POST'])
+recognizer = FaceRecognizer()
+@app.route("/")
+def home():
+    return render_template("index.html")
+@app.route("/profile")
+def profile():
+    return render_template("profile.html")
+@app.route("/capture")
 def capture():
-    data = request.get_json()
-    image_data = re.sub('^data:image/.+;base64,', '', data['image'])
-    image_bytes = base64.b64decode(image_data)
-
-    os.makedirs("dataset", exist_ok=True)
-    filename = f"dataset/student_{len(os.listdir('dataset'))+1}.png"
-    with open(filename, "wb") as f:
-        f.write(image_bytes)
-
-    return jsonify({"message": "Face captured and saved successfully!"})
-
-if __name__ == '__main__':
+    return render_template("capture.html")
+@app.route("/attendance")
+def attendance():
+    records = get_attendance()
+    return render_template("attendance.html", records=records)
+@app.route("/register", methods=["POST"])
+def register():
+    student_name = request.form["student_name"]
+    images = request.files.getlist("images")
+    save_uploaded_images(student_name, images)
+    generate_embeddings()
+    return redirect("/")
+@app.route("/recognize", methods=["POST"])
+def recognize():
+    image_path = None
+    uploaded_image = request.files.get("image")
+    if uploaded_image and uploaded_image.filename != "":
+        image_path = save_temp_image(uploaded_image)
+    else:
+        captured = request.form.get("captured_image")
+        if captured:
+            image_path = save_webcam_image(captured)
+    if image_path is None:
+        return render_template(
+            "result.html",
+            status=False,
+            message="No image selected."
+        )
+    result = recognizer.recognize(image_path)
+    delete_temp_file(image_path)
+    if result["status"]:
+        mark_attendance(result["student"])
+    return render_template(
+        "result.html",
+        status=result["status"],
+        student=result.get("student"),
+        similarity=result.get("similarity"),
+        message=result["message"]
+    )
+if __name__ == "__main__":
     app.run(debug=True)

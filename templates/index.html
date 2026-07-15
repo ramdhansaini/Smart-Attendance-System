@@ -1,19 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Home</title>
-        <link rel="stylesheet" href="../static/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Attendance System</title>
+    <link rel="stylesheet" href="../static/style.css">
 </head>
 <body>
-    <div id="contner">
-        <h1>Home Page</h1>
-        <div>
-            <button>Mark Attandenc</button>
-            <button>Register</button>
+    <header class="header">
+        <h1>Smart Attendance System</h1>
+        <p>AI powered student attendance system using face recognition technology</p>
+    </header>
+    <div class="container">
+        <div class="card">
+            <h2>Register Student</h2>
+            <p>Create a new student profile by entering student details and uploading
+                one or two images for future recognition.
+            </p>
+            <form action="/profile">
+                <button type="submit">Create a new profile</button>
+            </form>
         </div>
-
+        <div class="card">
+            <h2>Capture Face</h2>
+            <p>Upload or capture a student's face to verify identity and automatically
+                mark attendance if the student is registered.
+            </p>
+            <form action="/capture">
+                <button type="submit">Mark attendance</button>
+            </form>
+        </div>
+        <div class="card">
+            <h2>Attendance Records</h2>
+            <p>View all attendance records stored in the system.</p>
+            <form action="/attendance">
+                <button type="submit">View</button>
+            </form>
+        </div>
     </div>
+    <footer>
+        <p>&copy; Face Attendance System | Developed using Flask, OpenCV and InsightFace</p>
+    </footer>
 </body>
 </html>

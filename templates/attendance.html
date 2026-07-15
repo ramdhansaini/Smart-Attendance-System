@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance Records</title>
+    <link rel="stylesheet" href="../static/style.css">
+</head>
+<body>
+    <header class="header">
+        <h1>Attendance Records</h1>
+        <p>
+            Face Attendance System
+        </p>
+    </header>
+    <div class="container">
+        <div class="card">
+            <h2>Student Attendance</h2>
+            {% if records %}
+            <table class="attendance-table">
+                <thead>
+                    <tr>
+                        <th>Student Name</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for record in records %}
+                    <tr>
+                        <td>{{ record.Name }}</td>
+                        <td>{{ record.Date }}</td>
+                        <td>{{ record.Time }}</td>
+                        <td>{{ record.Status }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="empty-message">
+                <h3>No Attendance Records Found</h3>
+                <p>
+                    Attendance will appear here after a student is successfully recognized.
+                </p>
+            </div>
+            {% endif %}
+            <br>
+            <form action="/">
+                <button type="submit">
+                    Back to Home
+                </button>
+            </form>
+        </div>
+    </div>
+    <footer>
+        <p>
+            &copy; 2026 Face Attendance System | Flask • OpenCV • InsightFace
+        </p>
+    </footer>
+</body>
+</html>

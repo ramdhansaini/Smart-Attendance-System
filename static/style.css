@@ -1,8 +1,452 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap")
+*{
+    margin : 0px;
+    padding: opx;
+    box-sizing: border-box;
+}
 body{
-    margin: 0;
-    height:fit-content;
+    font-family: "poppins", sans-serif;
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    color: #333;
+}
+.header{
+    text-align: center;
+    padding: 10px;
+    color: white;
+}
+.header h1{
+    font-size: 35px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+.header p{
+    margin-top: 10px;
+    font-size: 18px;
+    color: #e7e7e7;
+}
+.container{
+    width: 100%;
+    max-width: 1200px;
+    margin: auto;
     display: flex;
     justify-content: center;
-    align-items: center;
-    background: rgb(90, 243, 220);
+    align-items: flex-start;
+    gap: 30px;
+    flex-wrap: wrap;
+    padding: 30px;
+    flex: 1;
+}
+.card{
+    background: white;
+    width: 380px;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, .20);
+    transition: .4s;
+}
+.card hover{
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0,0,0,.30);
+}
+.card h2{
+    text-align: center;
+    margin-bottom: 20px;
+    color: #1e3c72;
+}
+.card p{
+    text-align: center;
+    line-height: 1.7;
+    margin-bottom: 25px;
+    color: #555;
+}
+.form-card{
+    background: white;
+    width: 600px;
+    padding: 35px;
+    border-radius: 20px;
+    box-shadow: 0 12px 25px rgba(0,0,0,.20);
+}
+.form-card h2{
+    text-align: center;
+    margin-bottom: 25px;
+    color: #1e3c72;
+}
+label{
+    display: block;
+    margin-top: 18px;
+    margin-bottom: 8px;
+    font-weight: 550;
+}
+input[type=text], input[type=file]{
+    width: 95%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    outline: none;
+    font-size: 13px;
+    transition: .3s;
+}
+input:focus{
+    border-color: #2a5298;
+    box-shadow: 0 0 8px rgba(42, 82, 152, .30);
+}
+button{
+    width: 100%;
+    margin-top: 25px;
+    padding: 13px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    background: #1e3c72;
+    color: white;
+    font-size: 16px;
+    font-weight: 540;
+    transition: .3s;
+}
+button:hover{
+    background: #2a5298;
+    transform: scale(1.03);
+}
+.button-group{
+    display:flex;
+    gap: 15px;
+    margin-top: 20px;
+}
+a{
+    text-decoration: none;
+    color: white;
+}
+ul{
+    margin-top: 15px;
+    padding-left: 20px;
+}
+li{
+    margin-bottom: 12px;
+    line-height: 1.7;
+}
+footer{
+    background: #10284d;
+    color: white;
+    text-align: center;
+    padding: 12px;
+    margin-top: auto;
+}
+footer p{
+    font-size: 15px;
+}
+video{
+    width: 100%;
+    height: 300px;
+    border-radius: 15px;
+    border: 3px solid #1e3c72;
+    background: #000;
+    object-fit: cover;
+    margin-bottom: 20px;
+}
+canvas{
+    display: none;
+}
+#preview{
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    border-radius: 15px;
+    border: 3px solid #2a5298;
+    margin-top: 20px;
+    display: none;
+}
+input[type=file]{
+    background:#f5f7fb;
+    cursor:pointer;
+}
+input[type=file]:hover{
+
+    background:#edf2ff;
+
+}
+.result-table{
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+.result-table th{
+    background: #1e3c72;
+    color: white;
+    padding: 14px;
+    text-align: left;
+}
+.result-table td{
+    padding: 14px;
+    background: #f8f9fc;
+    border-bottom: 1px solid #ddd;
+}
+.attendance-table{
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 25px;
+    overflow: hidden;
+    border-radius: 10px;
+}
+.attendance-table thead{
+    background: #1e3c72;
+    color: white;
+}
+.attendance-table th{
+    padding: 15px;
+    text-align: center;
+}
+.attendance-table td{
+    padding: 14px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+.attendance-table tbody tr:nth-child(even){
+    background: #f4f6fb;
+}
+.attendance-table tbody tr:hover{
+    background: #dce8ff;
+    transition: .3s;
+}
+.success{
+    color:#198754;
+    font-weight:700;
+    text-align:center;
+    font-size:22px;
+    margin-bottom:20px;
+}
+.error{
+    color :#dc3545;
+    font-weight: 700;
+    text-align: center;
+    font-size: 22px;
+    margin-bottom: 20px;
+}
+.empty-message{
+    text-align:center;
+    padding:40px;
+}
+.empty-message h3{
+    color:#dc3545;
+    margin-bottom:15px;
+}
+.empty-message p{
+    color:#666;
+}
+.info-card{
+    width:380px;
+    background:white;
+    padding:30px;
+    border-radius:20px;
+    box-shadow:0 10px 25px rgba(0,0,0,.18);
+}
+.info-card h2{
+    text-align:center;
+    color:#1e3c72;
+    margin-bottom:20px;
+}
+.info-card ul{
+    padding-left:25px;
+}
+.info-card li{
+    margin-bottom:15px;
+    color:#555;
+}
+.upload-box{
+    border:2px dashed #2a5298;
+    border-radius:15px;
+    padding:30px;
+    text-align:center;
+    background:#f9fbff;
+    transition:.3s;
+}
+.upload-box:hover{
+    background:#eef4ff;
+    border-color:#1e3c72;
+}
+form{
+    margin-top:15px;
+}
+form button{
+    margin-top:20px;
+}
+.table-title{
+    text-align:center;
+    margin-bottom:20px;
+    color:#1e3c72;
+}
+.status-present{
+    background:#198754;
+    color:white;
+    padding:6px 15px;
+    border-radius:20px;
+    font-size:14px;
+    font-weight:600;
+}
+.status-unknown{
+    background:#dc3545;
+    color:white;
+    padding:6px 15px;
+    border-radius:20px;
+    font-size:14px;
+    font-weight:600;
+}
+@media (max-width: 992px){
+    .container{
+        flex-direction:column;
+        align-items:center;
+    }
+    .card,
+    .form-card,
+    .info-card{
+        width:90%;
+    }
+}
+@media (max-width:768px){
+    .header h1{
+        font-size:32px;
+    }
+    .header p{
+        font-size:16px;
+    }
+    .button-group{
+        flex-direction:column;
+    }
+    button{
+        width:100%;
+    }
+    video,
+    #preview{
+        height:250px;
+    }
+}
+@media (max-width:480px){
+    .header{
+        padding:25px;
+    }
+    .header h1{
+        font-size:26px;
+    }
+    .header p{
+        font-size:15px;
+    }
+    .card,
+    .form-card,
+    .info-card{
+        padding:20px;
+    }
+    table{
+        font-size:13px;
+    }
+}
+.card,
+.form-card,
+.info-card{
+    animation:fadeUp .8s ease;
+}
+@keyframes fadeUp{
+    from{
+        opacity:0;
+        transform:translateY(40px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+button{
+    position:relative;
+    overflow:hidden;
+}
+button::after{
+    content:"";
+    top:0;
+    width:100%;
+    height:100%;
+    background:rgba(255,255,255,.25);
+    transition: 0.3s;
+}
+input{
+    transition:.3s;
+}
+input:hover{
+    border-color:#1e3c72;
+}
+.result-table tr:hover td,
+.attendance-table tbody tr:hover{
+    transition:.3s;
+}
+.card,
+.form-card,
+.info-card{
+    background:rgba(255,255,255,.95);
+    backdrop-filter:blur(8px);
+}
+img{
+    max-width:100%;
+    border-radius:12px;
+}
+video{
+    transition:.4s;
+}
+video:hover{
+    transform:scale(1.02);
+}
+::-webkit-scrollbar{
+    width:10px;
+}
+::-webkit-scrollbar-track{
+    background:#d9e4ff;
+}
+::-webkit-scrollbar-thumb{
+    background:#1e3c72;
+    border-radius:20px;
+}
+::-webkit-scrollbar-thumb:hover{
+    background:#2a5298;
+}
+::selection{
+    background:#2a5298;
+    color:white;
+}
+footer{
+    box-shadow:0 -5px 20px rgba(0,0,0,.15);
+}
+.card,
+.form-card,
+.info-card{
+    border-top:5px solid #1e3c72;
+}
+.result-table,
+.attendance-table{
+    box-shadow:0 5px 20px rgba(0,0,0,.10);
+}
+.card h2,
+.form-card h2,
+.info-card h2{
+    position:relative;
+    padding-bottom:10px;
+}
+.card h2::after,
+.form-card h2::after,
+.info-card h2::after{
+    content:"";
+    width:70px;
+    height:4px;
+    background:#2a5298;
+    position:absolute;
+    left:50%;
+    transform:translateX(-50%);
+    bottom:0;
+    border-radius:10px;
+}
+.info-card li{
+    padding-left:5p
+}
+html{
+    scroll-behavior:smooth;
+}
+body{
+    overflow-x:hidden;
 }
