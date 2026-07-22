@@ -127,7 +127,9 @@ python app.py
 ![Attendance Recordes](screenshorts/record.png)
 
 Author
+
 Ramdhan Saini
+
 GitHub: https://github.com/ramdhansaini
 
 License
