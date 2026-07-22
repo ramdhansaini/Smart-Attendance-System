@@ -1,3 +1,9 @@
-flask
+# Requirements
+Flask
 opencv-python
-face_recognition
+numpy
+pandas
+insightface
+onnxruntime
+Pillow
+scikit-learn
